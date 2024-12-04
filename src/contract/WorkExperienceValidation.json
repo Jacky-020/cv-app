@@ -1,0 +1,427 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "entryId",
+				"type": "uint256"
+			}
+		],
+		"name": "confirmWorkExperience",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "employeeAddr",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "EmployeeRegistered",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "employerAddr",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "EmployerRegistered",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "commentText",
+				"type": "string"
+			},
+			{
+				"internalType": "bool",
+				"name": "upVote",
+				"type": "bool"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			}
+		],
+		"name": "peerComment",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "comment",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "bool",
+				"name": "upVote",
+				"type": "bool"
+			}
+		],
+		"name": "PeerCommentAdded",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "workExperience",
+				"type": "string"
+			}
+		],
+		"name": "proposeExperience",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "registerEmployee",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "registerEmployer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "entryId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "employee",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "employer",
+				"type": "address"
+			}
+		],
+		"name": "WorkExperienceAdded",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "entryId",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "employer",
+				"type": "address"
+			}
+		],
+		"name": "WorkExperienceConfirmed",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "checkRole",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "employeeAddr",
+				"type": "address"
+			}
+		],
+		"name": "getEmployeeRecords",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "employer",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "employerName",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "employee",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "employeeName",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "entryId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "confirmed",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct WorkExperienceValidation.WorkExperienceEntry[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "page",
+				"type": "uint256"
+			}
+		],
+		"name": "getEmployerList",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "receivedExperienceIds",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "reputationPoints",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "peerCommentIds",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "commentMadeCounter",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "upVote",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "downVote",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct WorkExperienceValidation.Employer[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "employerAddr",
+				"type": "address"
+			}
+		],
+		"name": "getEmployerRecords",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "employer",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "employerName",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "employee",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "employeeName",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "entryId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "confirmed",
+						"type": "bool"
+					}
+				],
+				"internalType": "struct WorkExperienceValidation.WorkExperienceEntry[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "employerAddr",
+				"type": "address"
+			}
+		],
+		"name": "getPeerComments",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "bool",
+						"name": "upVote",
+						"type": "bool"
+					},
+					{
+						"internalType": "string",
+						"name": "comment",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "commentorName",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "commentorAddress",
+						"type": "address"
+					}
+				],
+				"internalType": "struct WorkExperienceValidation.PeerComment[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
