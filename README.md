@@ -12,6 +12,10 @@ Make sure you have the following installed on your machine:
 
 ## Steps to Open the App
 
+### Direct access to netlify ###
+https://jacky-020-cv-app.netlify.app/
+
+### Deploy locally (may fails because of environmental issue) ###
 1. **Download the Project**
    - Download the project folder and extract it to your desired location.
 
