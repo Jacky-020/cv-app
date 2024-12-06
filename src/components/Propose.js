@@ -30,12 +30,6 @@ const Propose = () => {
         // Connect to Ethereum and get the contract
         const contract = await connectEthereum();
 
-        // Ensure the contract is defined before proceeding
-        if (!contract) {
-            alert("Failed to connect to the contract. Please try again.");
-            return;
-        }
-
         try {
             // Call the contract method to propose work experience
             const tx = await contract.proposeExperience(employerAddress, workDescription);
@@ -43,7 +37,7 @@ const Propose = () => {
             alert('Proposal has been sent!'); // Notify the user of success
         } catch (error) {
             console.error(error); // Log the error for debugging
-            alert('Error in sending proposal. Please try again.'); // Notify the user of the error
+            alert('Error in sending proposal. Please try again. Make sure you are logged in using your employee metamask accountAn error occurred while sending the proposal. Please try again and ensure that you are logged in with your employee MetaMask account.'); // Notify the user of the error
         }
     };
 
@@ -101,3 +95,4 @@ const Propose = () => {
     );
 } 
 export default Propose;
+

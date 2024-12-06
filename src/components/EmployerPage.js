@@ -186,27 +186,37 @@ const EmployerPage = () => {
     if (mode === MODES.SELECTING) {
         content = (
             <>
-                <Typography variant="h6" sx={{ color: 'purple' }}>{selectedEmployer?.name}</Typography>
-                <Typography variant="subtitle1" sx={{ fontSize: '0.6rem', color: 'text.secondary' }}>{selectedEmployer?.addr}</Typography>
+                <Typography variant="h6" sx={{color: 'purple'}}>{selectedEmployer?.name}</Typography>
+                <Typography variant="subtitle1" sx={{fontSize: '0.6rem', color: 'text.secondary'}}>{selectedEmployer?.addr}</Typography>
                 <Typography variant="h6" color='primary'>Peer Comments:</Typography>
                 {peerComments.length > 0 ? (
+                    // if there are peer comments, display one by one
                     peerComments.map((comment, index) => (
-                        <Box key={index} sx={{ display: 'flex', flexDirection: 'row' }}>
-                            <Typography sx={{ color: 'purple' }}>{index + 1}. {comment.commentorName}</Typography>
-                            {comment.upVote ? (
-                                <Box sx={{ color: 'green', display: 'flex', flexDirection: 'row' }}>
-                                    <Icon><ArrowUpward /></Icon>
-                                </Box>
-                            ) : (
-                                <Box sx={{ color: 'red', display: 'flex', flexDirection: 'row' }}>
-                                    <Icon><ArrowDownward /></Icon>
-                                </Box>
-                            )}
-                            <Typography variant="subtitle1" sx={{ fontSize: '0.6rem', color: 'text.secondary' }}>{comment.commentorAddress}</Typography>
-                            <Typography>{comment.comment}</Typography>
+                        <>
+                        {/* Reputation points display */}
+                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                            <Typography sx={{color: 'purple'}} key={index}>{index + 1}. {comment.commentorName}</Typography>
+                            {/* Vote display */}
+                            {comment.upVote?(        
+                            // upvote icon                
+                            <Box sx={{ color: 'green', display: 'flex', flexDirection: 'row' }}>
+                                <Icon><ArrowUpward /></Icon>
+                            </Box>)
+                            :
+                            // downvote icon
+                            (<Box sx={{ color: 'red', display: 'flex', flexDirection: 'row' }}>
+                                <Icon><ArrowDownward /></Icon>
+                            </Box>)
+                            }
                         </Box>
+                        {/* commentor address display */}
+                        <Typography variant="subtitle1" sx={{fontSize: '0.6rem', color: 'text.secondary'}}>{comment.commentorAddress}</Typography>
+                        {/* peer comment display */}
+                        <Typography key={index}>{comment.comment}</Typography>
+                        </>
                     ))
                 ) : (
+                    // display if no peer comment
                     <Typography>No comments available</Typography>
                 )}
                 {isEmployer && 
@@ -215,7 +225,7 @@ const EmployerPage = () => {
                         variant="contained"
                         color="primary"
                         onClick={makeComment}
-                    >
+                    >      
                         Comment
                     </StyledButton>
                 }

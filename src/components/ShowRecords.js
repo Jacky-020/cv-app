@@ -150,7 +150,7 @@ const ShowRecords = () => {
                         <ListItem key={index} disablePadding>
                             {/* Button to toggle selection of the record */}
                             <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
-                                {isEmployer === true  && (
+                                {isEmployer === true && !record.confirmed && (
                                     <ListItemIcon>
                                         <Checkbox
                                             edge="start"
