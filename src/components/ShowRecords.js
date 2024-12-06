@@ -8,7 +8,6 @@ import {
     Checkbox,
     IconButton,
     Tooltip,
-    Box,
     Typography
 } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -151,7 +150,7 @@ const ShowRecords = () => {
                         <ListItem key={index} disablePadding>
                             {/* Button to toggle selection of the record */}
                             <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
-                                {isEmployer === true && record.checked && (
+                                {isEmployer === true  && (
                                     <ListItemIcon>
                                         <Checkbox
                                             edge="start"

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
 import {
     List,
     ListItem,
     ListItemText,
     IconButton,
     Tooltip,
-    Box,
     Typography,
     TextField
 } from '@mui/material';

@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { ethers } from 'ethers';
 import WorkExperienceValidation from '../contract/WorkExperienceValidation.json';
 import { contractAddress } from '../config';
