@@ -1,94 +1,69 @@
-// src/components/EmployeeRegistration.js
-
 import React, { useState } from 'react';
-import { ethers } from 'ethers';
-import WorkExperienceValidation from '../contract/WorkExperienceValidation.json';
 import {
     StyledContainer,
     StyledCard,
     FormContainer,
-    StyledForm,
     StyledTextField,
     StyledButton
 } from "./RegistrationStyle";
-import { Box, Typography } from '@mui/material';
-import { contractAddress } from '../config';
+import { Typography } from '@mui/material';
+import { connectEthereum } from '../utils/utils';
 
+/**
+ * Registration Component
+ *
+ * This component provides a user interface for registering users as either 
+ * an employee or an employer within the application. It includes an input 
+ * field for entering the user's name. There are 2 buttons for registering as 
+ * employee and employer respectively.
+ *
+ */
 
-function Registration(){
+const Registration = () => {
+    // State variables for name input, loading status, and error messages
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-
-    const registerEmployee = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
-
+    // Handles registration for employee or employer based on the button clicked
+    const handleRegistration = async (role) => {
+        // Validate name input
         if (!name) {
-            alert('Name cannot be empty.');
+            setError('Name cannot be empty.');
             return;
         }
 
+        // Check for MetaMask installation
         if (typeof window.ethereum === 'undefined') {
-            alert('Please install MetaMask.');
+            setError('Please install MetaMask.');
             return;
         }
 
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, WorkExperienceValidation, signer);
-        
+
+        const contract = await connectEthereum();
         
         try {
             setLoading(true);
-            const tx = await contract.registerEmployee(name);
-            const receipt = await tx.wait();
-            if (receipt.status === 1) {
-                console.log(receipt)
-                alert("Registration successful!");
+            // Call the appropriate contract method based on role
+            const tx = (role === 'employee') ? await contract.registerEmployee(name) : await contract.registerEmployer(name);
+            const result = await tx.wait();
+
+            // Check transaction status
+            if (result.status === 1) {
+                alert(`${name} has been registered as ${role} successfully!`);
+                setName(''); // Clear input field
+                setError(''); // Clear any previous errors
             } else {
-                alert("Transaction rejected.");
+                setError('Transaction rejected.'); // Handle transaction rejection
             }
-            setName('');
-        } catch (error) {
-            console.error(error);
-            alert('Error registering employee. Please try again.');
+        } catch (e) {
+            console.error(e);
+            setError(`Error registering as ${role}. Please try again.`); // Handle any errors
         } finally {
-            setLoading(false);
+            setLoading(false); // Reset loading state
         }
     };
 
-    const registerEmployer = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
-
-        if (!name) {
-            alert('Name cannot be empty.');
-            return;
-        }
-
-        if (typeof window.ethereum === 'undefined') {
-            alert('Please install MetaMask.');
-            return;
-        }
-
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, WorkExperienceValidation, signer);
-        
-        
-        try {
-            setLoading(true);
-            const tx = await contract.registerEmployer(name);
-            await tx.wait();
-            alert('Employer registered successfully!');
-            setName('');
-        } catch (error) {
-            console.error(error);
-            alert('Error registering employer. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
     return (
         <StyledContainer maxWidth="sm">
             <StyledCard elevation={16}>
@@ -97,6 +72,7 @@ function Registration(){
                         Register 
                     </Typography>
                     <form>
+                        {/* Text field for entering the account name */}
                         <StyledTextField
                             variant="outlined"
                             margin="normal"
@@ -109,36 +85,34 @@ function Registration(){
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
-                        {error && <p style={{ color: 'red' }}>{error}</p>}
+                        {error && <p style={{ color: 'red' }} aria-live="assertive">{error}</p>}
                         <div>
+                            {/* Button for registering as an employee */}
                             <StyledButton
                                 type="button" 
                                 variant="contained"
                                 color="primary"
-                                onClick={registerEmployee}
+                                onClick={() => handleRegistration('employee')}
                                 disabled={loading}
                             >
                                 {loading ? 'Registering...' : 'Register as Employee'}
                             </StyledButton>
+                            {/* Button for registering as an employer */}
                             <StyledButton
                                 type="button" 
                                 variant="contained"
                                 color="primary"
-                                onClick={registerEmployer}
+                                onClick={() => handleRegistration('employer')}
                                 disabled={loading}
                             >
                                 {loading ? 'Registering...' : 'Register as Employer'}
                             </StyledButton>
                         </div>
                     </form>
-                    
                 </FormContainer>
             </StyledCard>
         </StyledContainer>
     );
-};
-
-
-
+}
 
 export default Registration;

@@ -1,8 +1,4 @@
-// External Libraries
-import * as React from 'react';
-import { ethers } from 'ethers';
-
-// Material-UI Components
+import React, {useState, useEffect} from 'react';
 import {
     List,
     ListItem,
@@ -16,165 +12,203 @@ import {
     Typography
 } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
-
-// Custom Components and Styles
 import { StyledButton, StyledCard, StyledContainer } from './RegistrationStyle';
-import WorkExperienceValidation from '../contract/WorkExperienceValidation.json';
-import { contractAddress } from '../config';
+import { connectEthereum } from '../utils/utils';
 
+/**
+ * ShowReceivedRecords Component
+ *
+ * This component displays a list of work experience records that have been 
+ * received by the logged-in user, allowing employers to review and approve 
+ * these records.
+ *
+ * Functionalities:
+ * - Checks the user's role (employer or employee) upon mounting.
+ * - Retrieves records based on the user's role:
+ *   - Employers can view received work records.
+ *   - Employees can view submitted work records (submitted in 'propose work experience').
+ * - Allows employers to approve selected records using checkboxes.
+ * - Displays relevant information for each record, including employer and 
+ *   employee names, confirmation status, and additional details in a tooltip.
+ *
+ * State Management:
+ * - Uses local state to manage the list of records, checked items for approval, 
+ *   the user's role, and any alert messages.
+ *
+ * User Interaction:
+ * - Hover over comment icon to view detail description
+ * - Users can toggle checkboxes to select records for approval.
+ * - Provides visual feedback on the confirmation status of each record.
+ * - Alerts the user in case of network errors or if MetaMask is not installed.
+ *
+ * The component is styled using Material-UI for a modern and responsive design.
+ */
 
-export default function ShowRecievedRecords() {
-  const [checked, setChecked] = React.useState([0]);
-  const [records, setRecords] = React.useState([]);
-  const [isEmployer, setIsEmployer] = React.useState(null);
-  const [alertMessage, setAlertMessage] = React.useState('');
-  // const [recordsWithId, setRecordsWithId] = React.useState([]);
-    
-    const handleToggle = (value) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+const ShowRecords = () => {
+  // State variables to manage checked items, records, user role, and alert messages
+  const [checked, setChecked] = useState([0]); // Tracks which records are selected for approval
+  const [records, setRecords] = useState([]); // Stores the retrieved records
+  const [isEmployer, setIsEmployer] = useState(null); // Indicates if the user is an employer
+  const [alertMessage, setAlertMessage] = useState(''); // Message for alerts
 
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
+  // Toggles the checked state of a record when clicked
+  const handleToggle = (value) => () => {
+      const currentIndex = checked.indexOf(value);
+      const newChecked = [...checked];
 
-            setChecked(newChecked);
-    };
-    const checkRole=  async (account) => {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, WorkExperienceValidation, signer);
+      // Add or remove the record from the checked list
+      if (currentIndex === -1) {
+          newChecked.push(value);
+      } else {
+          newChecked.splice(currentIndex, 1);
+      }
+      setChecked(newChecked); // Update the checked state
+  };
+
+  // Checks the user's role (employer or employee) to determine which records to retrieve
+  const checkRole = async () => {
+      const contract = await connectEthereum();
       
       try {
-          const role = await contract.checkRole();
-          if(role === 'employer'){
-            setIsEmployer(true);
-          }else if(role === 'employee'){
-            setIsEmployer(false);
-          }else{
-            setAlertMessage('Register first')
+          const role = await contract.checkRole(); // Call contract to check user role
+          if (role === 'employer') {
+              setIsEmployer(true); // Set state if user is an employer
+          } else if (role === 'employee') {
+              setIsEmployer(false); // Set state if user is an employee
+          } else {
+              setAlertMessage('Register first'); // Alert if user is not registered
           }
       } catch (error) {
           console.error(error);
-          setAlertMessage('Network error');
-      } 
-  }
-    const retreiveRecords = async () =>{
-        if (typeof window.ethereum === 'undefined') {
-          setAlertMessage('Please install MetaMask.');
-            return;
-        }
+          setAlertMessage('Network error'); // Alert on network errors
+      }
+  };
 
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(contractAddress, WorkExperienceValidation, signer);
-        const myAccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        try {
-          
-          if(isEmployer){
-            const result = await contract.getEmployerRecords(myAccounts[0]);
-            setRecords(result);
-          }else{
-            const result = await contract.getEmployeeRecords(myAccounts[0]);
-            setRecords(result);
+  // Retrieves records based on the user's role
+  const retrieveRecords = async () => {
+      if (typeof window.ethereum === 'undefined') {
+          setAlertMessage('Please install MetaMask.'); // Alert if MetaMask is missing
+          return;
+      }
+
+      const contract = await connectEthereum();
+      const myAccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      try {
+          // Fetch records based on user role
+          if (isEmployer) {
+              const result = await contract.getEmployerRecords(myAccounts[0]);
+              setRecords(result); // Store employer records
+          } else {
+              const result = await contract.getEmployeeRecords(myAccounts[0]);
+              setRecords(result); // Store employee records
           }
-        } catch (error) {
-            console.error(error);
-            setAlertMessage('No records');
-        } 
-    }
-    React.useEffect(() => {
-      checkRole(); // Call checkAccount on mount
+      } catch (error) {
+          console.error(error);
+          setAlertMessage('No records'); // Alert if no records are found
+      }
+  };
+
+  // Effect to check user role on component mount
+  useEffect(() => {
+      checkRole(); // Call checkRole function to determine user role
   }, []);
-    React.useEffect(() => {
-      if(isEmployer != null)
-        retreiveRecords();  
+
+  // Effect to retrieve records when the user's role is determined
+  useEffect(() => {
+      if (isEmployer != null) {
+          retrieveRecords(); // Fetch records based on user role
+      }
   }, [isEmployer]);
 
-    const approveRecords = async ()=>{
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(contractAddress, WorkExperienceValidation, signer);
+  // Approves selected records by calling the contract method
+  const approveRecords = async () => {
+      const contract = await connectEthereum();
       let approvalList = [];
-      for(const index of checked){
-        approvalList.push(records[index]);
+      
+      // Gather records that are checked for approval
+      for (const index of checked) {
+          approvalList.push(records[index]);
       }
-      for(const record of approvalList){
-        contract.confirmWorkExperience(record.entryId);
+
+      // Confirm each selected record
+      for (const record of approvalList) {
+          await contract.confirmWorkExperience(record.entryId); // Confirm work experience in the contract
       }
-    }
+  };
 
   return (
-  
-  <StyledContainer>
-      <StyledCard elevation={16} sx={{ width: '400px', margin: 'auto', padding: 5 }}>
-        <Typography component="h1" variant="h5" align="center" color='primary' sx={{ fontWeight: 600 }}>
-          Records
-        </Typography>
-        <h1>{alertMessage}</h1>
-        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-          {records.map((record, index) => {
-            const labelId = `checkbox-list-label-${index}`;
+    <StyledContainer>
+        <StyledCard elevation={16} sx={{ width: '400px', margin: 'auto', padding: 5 }}>
+            <Typography component="h1" variant="h5" align="center" color='primary' sx={{ fontWeight: 600 }}>
+                Records
+            </Typography>
+            <h1>{alertMessage}</h1> {/* Display alert messages to the user */}
+            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                {records.map((record, index) => {
+                    const labelId = `checkbox-list-label-${index}`;
 
-            return (
-              <ListItem key={index} disablePadding>
-                <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
-                  {isEmployer === true && record.checked && (
-                  <ListItemIcon>
-                    <Checkbox
-                      edge="start"
-                      checked={checked.includes(index)}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ 'aria-labelledby': labelId }}
-                    />
-                  </ListItemIcon>
-                  )}
-                  <ListItemText
-                    id={labelId}
-                    secondary={
-                      <>
-                        <div style={{ color: '#003366', fontWeight: 'bold' }}>
-                          Employer - {record.employerName}</div> 
-                        <div style={{ color: '#666666', fontSize: '0.6rem' }}>
-                          {record.employer}
-                        </div> 
-                        <div style={{ color: '#4A90E2', fontWeight: 'bold' }}>
-                          Employee - {record.employeeName}
-                        </div> 
-                        <div style={{ color: '#666666', fontSize: '0.6rem' }}>
-                          {record.employee}
-                        </div> 
-                        <div style={{ color: record.confirmed ? '#28a745' : '#dc3545' }}>
-                          Confirmed: {record.confirmed ? 'Yes' : 'No'}
-                        </div> {/* Green for Yes, red for No */}
-                      </>
-                  }
-                  />
-                </ListItemButton>
-                <Tooltip title={record.description} arrow>
-                  <IconButton edge="end" aria-label="comments">
-                    <CommentIcon />
-                  </IconButton>
-                </Tooltip>
-              </ListItem>
-            );
-          })}
-        </List>
-        {isEmployer === true && (
-            <StyledButton
-                type="button" 
-                variant="contained"
-                color="primary"
-                onClick={approveRecords}
-            >
-                Approve
-            </StyledButton>
-        )}
-      </StyledCard>
+                    return (
+                        <ListItem key={index} disablePadding>
+                            {/* Button to toggle selection of the record */}
+                            <ListItemButton role={undefined} onClick={handleToggle(index)} dense>
+                                {isEmployer === true && record.checked && (
+                                    <ListItemIcon>
+                                        <Checkbox
+                                            edge="start"
+                                            checked={checked.includes(index)} // Check if the record is selected
+                                            tabIndex={-1}
+                                            disableRipple
+                                            inputProps={{ 'aria-labelledby': labelId }}
+                                        />
+                                    </ListItemIcon>
+                                )}
+                                {/* Brief info of the record */}
+                                <ListItemText
+                                    id={labelId}
+                                    secondary={
+                                        <>
+                                            <div style={{ color: '#003366', fontWeight: 'bold' }}>
+                                                Employer - {record.employerName}</div>
+                                            <div style={{ color: '#666666', fontSize: '0.6rem' }}>
+                                                {record.employer}
+                                            </div>
+                                            <div style={{ color: '#4A90E2', fontWeight: 'bold' }}>
+                                                Employee - {record.employeeName}
+                                            </div>
+                                            <div style={{ color: '#666666', fontSize: '0.6rem' }}>
+                                                {record.employee}
+                                            </div>
+                                            <div style={{ color: record.confirmed ? '#28a745' : '#dc3545' }}>
+                                                Confirmed: {record.confirmed ? 'Yes' : 'No'}
+                                            </div> {/* Green for Yes, red for No */}
+                                        </>
+                                    }
+                                />
+                            </ListItemButton>
+                            {/* Tooltip to show the detail record description */}
+                            <Tooltip title={record.description} arrow>
+                                <IconButton edge="end" aria-label="comments">
+                                    <CommentIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </ListItem>
+                    );
+                })}
+            {/* Button for approving checked records, available for employer only */}
+            </List>
+            {isEmployer === true && (
+                <StyledButton
+                    type="button" 
+                    variant="contained"
+                    color="primary"
+                    onClick={approveRecords}
+                >
+                    Approve
+                </StyledButton>
+            )}
+        </StyledCard>
     </StyledContainer>
   );
 }
 
+export default ShowRecords;
