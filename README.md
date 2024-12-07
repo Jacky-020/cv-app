@@ -54,7 +54,15 @@ https://jacky-020-cv-app.netlify.app/
 
 ## General view
 
-This is a CV validation app that provides extra validation features for job seeking app likes Linkedin.
+This is a CV validation app that provides extra validation features for job seeking app likes Linkedin. 
+
+Pages:
+
+-  **registration (starting page)** : for registration of Metamask account as one of the two types: *employee* / *employer* 
+-  **Show Records** : for displaying submitted / received work experience records of the current account
+-  **propose work experience** : for *employee* account to send a proposed work experience records to *employer*
+-  **search employers** : display a list of employer account. User can click on a particular employer to see its peer comment. If the user is an *employer*, he can proceed to comment if he has enough reputation points
+-  **search employees** : for checking work experience record of other *employee*
 
 
 
