@@ -86,7 +86,38 @@ This app must be used with the MetaMask plugin. When using the app, please switc
 
 ### registration
 
-1. click on the 'REGISTRATION' on the top navbar to switch to registation page
-2. Enter the account name 
-3. click on the left tab *REGISTER AS EMPLOYEE*
 ![](markdown_images\registration.png)
+1. click on the **REGISTRATION** on the top navbar to switch to registation page.
+2. Enter the account name.
+3. To register your account as *employee*, click on the left tab (**REGISTER AS EMPLOYEE**) . To register your account as *employer*, click on the right tab (**REGISTER AS EMPLOYER**).
+4. Comfirm transaction with your Metamask account, makes sure you have enough ether.
+5. The button will turn grey during the transaction, please wait patiently.
+6. Upon successful registration, the button returns normal and an alert `${name} has been registered as ${role} successfully!` pops out.
+7. This account can then be used in other function
+- Each Metamask account can only register once, either as *employee* or *employer*. This is to encourage user to be responsible to their account.
+- For testing, recommends to at least prepare 2 accounts, one as an *employee* and another as *employer*
+
+### Propose
+
+**switch to an employee account**
+
+1. Click **SEARCH EMPLOYERS** on the navbar to the employer page.
+2. Choose an employer that you want to propose a work experience record for validation, copy the account address.
+![](markdown_images\choose_employer.png)
+3. Click **PROPOSE** on the navbar to the propose page.
+4. Paste the copied account address, enter the propose work description and click **SUBMIT PROPOSAL**
+![](markdown_images\propose.png)
+5. The propose work experience can be viewed in **SHOW RECORDS** page by the sender (*employee*) and receiver (*employer*) as **Comfirmed: No**.
+- It takes time for the proposal to settle in the blockchain, you need to wait for a few seconds before it appears in the **SHOW RECORDS** page. An alert will show up when it finished.
+- This waiting time is insignificant in real scenerio as you should not expect employer to immediate approve your proposal.
+![](markdown_images\successful_propose.png)
+
+### Approve Records
+
+**switch to an employer account**
+
+1. Notes the difference in UI for *employee* and *employer*: *employer* has check box and approve button.
+2. Hover over the comment icon to see the work description (available for both *employer* and *employee* account).
+3. Click on those records that you want to approve, then click **APPROVE**.
+![](markdown_images\approve_record.png)
+4. Wait for the transaction settles, revisit the **SHOW RECORDS** page, you will see the the record approved will be indicated as **Comfirmed: Yes**.
