@@ -84,10 +84,6 @@ const ShowRecords = () => {
 
   // Retrieves records based on the user's role
   const retrieveRecords = async () => {
-      if (typeof window.ethereum === 'undefined') {
-          setAlertMessage('Please install MetaMask.'); // Alert if MetaMask is missing
-          return;
-      }
 
       const contract = await connectEthereum();
       const myAccounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -105,38 +101,38 @@ const ShowRecords = () => {
       }
   };
 
-  // Effect to check user role on component mount
-  useEffect(() => {
-      checkRole(); // Call checkRole function to determine user role
-  }, []);
-
-  // Effect to retrieve records when the user's role is determined
-  useEffect(() => {
-      if (isEmployer != null) {
-          retrieveRecords(); // Fetch records based on user role
-      }
-  }, [isEmployer]);
-
   // Approves selected records by calling the contract method
   const approveRecords = async () => {
-    const contract = await connectEthereum();
-    let approvalList = [];
-    
-    // Gather records that are checked for approval
-    for (const index of checked) {
-        approvalList.push(records[index]);
-        console.log(records[index]);
-    }
-
-    try{
-        // Confirm each selected record
-        for (const record of approvalList) {
-            await contract.confirmWorkExperience(record.entryId); // Confirm work experience in the contract
+      const contract = await connectEthereum();
+      let approvalList = [];
+      
+      // Gather records that are checked for approval
+      for (const index of checked) {
+          approvalList.push(records[index]);
+          console.log(records[index]);
         }
-    }catch(error){
-        alert("rejected"); // alert for rejection
-    }
-  };
+        
+        try{
+            // Confirm each selected record
+            for (const record of approvalList) {
+                await contract.confirmWorkExperience(record.entryId); // Confirm work experience in the contract
+            }
+        }catch(error){
+            alert("rejected"); // alert for rejection
+        }
+    };
+    
+    // Effect to check user role on component mount
+    useEffect(() => {
+        checkRole(); // Call checkRole function to determine user role
+    }, []);
+  
+    // Effect to retrieve records when the user's role is determined
+    useEffect(() => {
+        if (isEmployer != null) {
+            retrieveRecords(); // Fetch records based on user role
+        }
+    }, [retrieveRecords, isEmployer]);
 
   return (
     <StyledContainer>

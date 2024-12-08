@@ -48,12 +48,6 @@ const EmployeePage = () => {
 
     // Function to retrieve records from the blockchain based on the employee's address
     const retrieveRecords = async () => {
-        // Check if MetaMask is installed
-        if (typeof window.ethereum === 'undefined') {
-            setAlertMessage('Please install MetaMask.'); // Alert if MetaMask is missing
-            return;
-        }
-
         // Connect to the Ethereum contract
         const contract = await connectEthereum();
         
@@ -75,7 +69,7 @@ const EmployeePage = () => {
         if (employeeAddress) {
             retrieveRecords(); // Call retrieveRecords if an address is set
         }
-    }, [employeeAddress]);
+    }, [retrieveRecords, employeeAddress]);
 
     return (
         <StyledContainer>
