@@ -33,13 +33,6 @@ const Registration = () => {
             return;
         }
 
-        // Check for MetaMask installation
-        if (typeof window.ethereum === 'undefined') {
-            setError('Please install MetaMask.');
-            return;
-        }
-
-
         const contract = await connectEthereum();
         
         try {

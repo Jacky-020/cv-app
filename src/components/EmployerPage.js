@@ -158,7 +158,7 @@ const EmployerPage = () => {
             await contract.peerComment(commentText, vote, selectedEmployer.addr);
             alert('Comment sent'); // Notify user of successful comment
         } catch (error) {
-            alert("You have made more comments than your reputation points!");
+            alert("Rejected. (You can only make as many comments as your reputation points)");
         }
     };
 

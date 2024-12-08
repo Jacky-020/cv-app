@@ -45,7 +45,7 @@ import { connectEthereum } from '../utils/utils';
 
 const ShowRecords = () => {
   // State variables to manage checked items, records, user role, and alert messages
-  const [checked, setChecked] = useState([0]); // Tracks which records are selected for approval
+  const [checked, setChecked] = useState([]); // Tracks which records are selected for approval
   const [records, setRecords] = useState([]); // Stores the retrieved records
   const [isEmployer, setIsEmployer] = useState(null); // Indicates if the user is an employer
   const [alertMessage, setAlertMessage] = useState(''); // Message for alerts
@@ -78,7 +78,6 @@ const ShowRecords = () => {
               setAlertMessage('Register first'); // Alert if user is not registered
           }
       } catch (error) {
-          console.error(error);
           setAlertMessage('Network error'); // Alert on network errors
       }
   };
@@ -102,7 +101,6 @@ const ShowRecords = () => {
               setRecords(result); // Store employee records
           }
       } catch (error) {
-          console.error(error);
           setAlertMessage('No records'); // Alert if no records are found
       }
   };
@@ -121,18 +119,23 @@ const ShowRecords = () => {
 
   // Approves selected records by calling the contract method
   const approveRecords = async () => {
-      const contract = await connectEthereum();
-      let approvalList = [];
-      
-      // Gather records that are checked for approval
-      for (const index of checked) {
-          approvalList.push(records[index]);
-      }
+    const contract = await connectEthereum();
+    let approvalList = [];
+    
+    // Gather records that are checked for approval
+    for (const index of checked) {
+        approvalList.push(records[index]);
+        console.log(records[index]);
+    }
 
-      // Confirm each selected record
-      for (const record of approvalList) {
-          await contract.confirmWorkExperience(record.entryId); // Confirm work experience in the contract
-      }
+    try{
+        // Confirm each selected record
+        for (const record of approvalList) {
+            await contract.confirmWorkExperience(record.entryId); // Confirm work experience in the contract
+        }
+    }catch(error){
+        alert("rejected"); // alert for rejection
+    }
   };
 
   return (
@@ -161,6 +164,7 @@ const ShowRecords = () => {
                                         />
                                     </ListItemIcon>
                                 )}
+                                </ListItemButton>
                                 {/* Brief info of the record */}
                                 <ListItemText
                                     id={labelId}
@@ -183,7 +187,6 @@ const ShowRecords = () => {
                                         </>
                                     }
                                 />
-                            </ListItemButton>
                             {/* Tooltip to show the detail record description */}
                             <Tooltip title={record.description} arrow>
                                 <IconButton edge="end" aria-label="comments">

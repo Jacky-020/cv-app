@@ -7,27 +7,27 @@ contract WorkExperienceValidation {
     struct Employee {
         address addr;
         string name;
-        uint256[] submittedExperienceIds; 
+        uint256[] submittedExperienceIds; // ref to universalExperienceRecord
     }
 
     struct Employer {
         address addr;
         string name;
-        uint256[] receivedExperienceIds;
+        uint256[] receivedExperienceIds; // ref to universalExperienceRecord
         uint256 reputationPoints; // Points for confirming work experiences
-        uint256[] peerCommentIds; 
+        uint256[] peerCommentIds; // ref to peerCommentRecord
         uint256 commentMadeCounter; // Number of comments made to other employers
         uint256 upVote; // Count of upvotes received
         uint256 downVote; // Count of downvotes received
     }
 
     struct WorkExperienceEntry {
-        string description;
-        address employer;
+        string description; // work description
+        address employer; // receiver's address
         string employerName;
-        address employee;
+        address employee; // sender's address
         string employeeName;
-        uint256 entryId;
+        uint256 entryId; // ref to universalExperienceRecord
         bool confirmed;
     }
 
@@ -38,12 +38,12 @@ contract WorkExperienceValidation {
         address commentorAddress;
     }
 
-    mapping(address => Employee) internal employees;
-    mapping(address => Employer) internal employers;
-    mapping(uint256 => WorkExperienceEntry) internal universalExperienceRecord;
-    address[] internal employerAddresses;
-    uint256 internal nextEntryId; // Track the next available entry ID
-    mapping(uint256 => PeerComment) internal peerCommentRecord;
+    mapping(address => Employee) internal employees; // stores all employees
+    mapping(address => Employer) internal employers; // stores all employers
+    mapping(uint256 => WorkExperienceEntry) internal universalExperienceRecord; // stores all work experience records
+    mapping(uint256 => PeerComment) internal peerCommentRecord; // stores all peerComment
+    address[] internal employerAddresses; // store employer address
+    uint256 internal nextEntryId; // Track the next work experience record entry ID
     uint256 internal nextPeerCommentId; // Track next PeerComment ID
 
     event EmployeeRegistered(address indexed employeeAddr, string name);

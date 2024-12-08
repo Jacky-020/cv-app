@@ -104,30 +104,32 @@ const EmployeePage = () => {
                 <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                     {/* Map through the records and display them in a list */}
                     {records.map((record, index) => (
+                        record.confirmed && (
                         <ListItem key={index} disablePadding>
                             <ListItemText
                                 secondary={
-                                    <>
-                                        <div style={{ color: '#003366', fontWeight: 'bold' }}>
-                                            Employer - {record.employerName} {/* Display employer name */}
-                                        </div> 
-                                        <div style={{ color: '#666666', fontSize: '0.6rem' }}>
-                                            {record.employer} {/* Display employer address */}
-                                        </div> 
-                                        <div style={{ color: record.confirmed ? '#28a745' : '#dc3545' }}>
-                                            Confirmed: {record.confirmed ? 'Yes' : 'No'} {/* Display confirmation status */}
-                                        </div>
-                                    </>
+                                        <>  
+                                            <div style={{ color: '#003366', fontWeight: 'bold' }}>
+                                                Employer - {record.employerName} {/* Display employer name */}
+                                            </div> 
+                                            <div style={{ color: '#666666', fontSize: '0.6rem' }}>
+                                                {record.employer} {/* Display employer address */}
+                                            </div> 
+                                            <div style={{ color: record.confirmed ? '#28a745' : '#dc3545' }}>
+                                                Confirmed: {record.confirmed ? 'Yes' : 'No'} {/* Display confirmation status */}
+                                            </div>
+                                        </>
                                 }
-                            />
+                                />
                             {/* Tooltip for showing additional description of the record */}
                             <Tooltip title={record.description} arrow>
                                 <IconButton edge="end" aria-label="comments">
                                     <CommentIcon /> {/* Comment icon for additional details */}
                                 </IconButton>
                             </Tooltip>
+                            
                         </ListItem>
-                    ))}
+                    )))}
                 </List>
             </StyledCard>
         </StyledContainer>
